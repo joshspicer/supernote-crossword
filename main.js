@@ -85,36 +85,6 @@ async function nytc(date) {
   }
 }
 
-function getWSJC(date) {
-  return new Promise((resolve, reject) => {
-    const req = https.request({
-      protocol: 'https:',
-      host: 's.wsj.net',
-      path: `/public/resources/documents/${moment(date).format('[XWD]MMDDYYYY')}.pdf`,
-      method: 'GET',
-    }, (res) => {
-      if (res.statusCode === 200) {
-        const data = [];
-        res.on('error', (err) => {
-          reject(err);
-        });
-        res.on('data', (chunk) => {
-          data.push(chunk);
-        });
-        res.on('end', () => {
-          resolve(Buffer.concat(data));
-        });
-      } else {
-        reject(res.statusCode);
-      }
-    });
-    req.on('error', (err) => {
-      reject(err);
-    });
-    req.end();
-  });
-}
-
 async function download(date) {
   console.log(`NYTC Block`);
   await nytc(new Date(date.getTime()));
